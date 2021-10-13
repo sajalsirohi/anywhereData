@@ -8,7 +8,16 @@ class Config(ABC):
     """
     # contains raw_config
     raw_config = {}
+    # connection type info which is passed into every class that implements this class
+    connection_type = None
 
     @abstractmethod
     def parse_config(self):
         pass
+
+
+class Connection(ABC):
+    __doc__ = """
+    A connection type abstract class. 
+    """
+    connection_name = None

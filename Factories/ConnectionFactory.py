@@ -2,6 +2,7 @@ import logging
 from beartype import beartype
 
 from package_utils import Singleton
+from Base_classes import Config, Connection
 
 
 class ConnectionFactory(metaclass=Singleton):
@@ -27,23 +28,23 @@ class ConnectionFactory(metaclass=Singleton):
             self._connection_builders[connection_type] = connection_builder
 
     @beartype
-    def create(self, config: list, **options):
+    def create(self, config: Config, **options) -> Connection:
         """
         Create the config object
-        :param config: JSON input config, which contains connection related
-                       attributes
-        :return:
+        :param config: A Config instance that contains the information to create or initialize
+        a connection with the Database.
+        :return: Connection instance
         """
 
         logging.info(f"Creating a config obj, using the raw_config : {config}")
-        config_builder_type = config.get('connection_type')
+        connection_type = config.connection_type
 
-        assert config_builder_type, f"'connection_type' key is missing from : {config}" \
-                                    f"Need this key to determine the type of connection"
+        assert connection_type, f"'connection_type' key is missing from : {config}" \
+                                f"Need this key to determine the type of connection"
 
         # need to check if we have this connection_type config builder registered or not
-        config_builder = self._connection_builders.get(config_builder_type)
-        if config_builder:
-            return config_builder(config)
+        connection_builder = self._connection_builders.get(connection_type)
+        if connection_builder:
+            return connection_builder(config, **options)
         else:
-            raise ValueError(f'Config builder not present for connection_type : "{config_builder_type}"')
+            raise ValueError(f'Config builder not present for connection_type : "{connection_type}"')
