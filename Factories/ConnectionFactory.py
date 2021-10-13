@@ -2,7 +2,7 @@ import logging
 from beartype import beartype
 
 from package_utils import Singleton
-from Base_classes import Config, Connection
+from BaseClasses import Config, Connection
 
 
 class ConnectionFactory(metaclass=Singleton):
@@ -42,9 +42,13 @@ class ConnectionFactory(metaclass=Singleton):
         assert connection_type, f"'connection_type' key is missing from : {config}" \
                                 f"Need this key to determine the type of connection"
 
-        # need to check if we have this connection_type config builder registered or not
+        # need to check if we have this connection_type connection builder registered or not
         connection_builder = self._connection_builders.get(connection_type)
         if connection_builder:
             return connection_builder(config, **options)
         else:
             raise ValueError(f'Config builder not present for connection_type : "{connection_type}"')
+
+
+# connection factory instance
+connection_factory = ConnectionFactory()

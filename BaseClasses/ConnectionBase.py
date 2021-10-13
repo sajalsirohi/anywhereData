@@ -6,8 +6,6 @@ class Config(ABC):
     Base class for config, which is passed onto to connection factory, to establish a 
     connection.
     """
-    # contains raw_config
-    raw_config = {}
     # connection type info which is passed into every class that implements this class
     connection_type = None
 

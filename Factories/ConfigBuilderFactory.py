@@ -1,6 +1,7 @@
 import logging
 
 from package_utils import Singleton
+from DatabaseConnectors import SQLConfig
 
 
 class ConfigBuilderFactory(metaclass=Singleton):
@@ -46,3 +47,10 @@ class ConfigBuilderFactory(metaclass=Singleton):
             return config_builder(raw_config)
         else:
             raise ValueError(f'Config builder not present for connection_type : "{config_builder_type}"')
+
+
+# creating an instance on Config builder factory
+config_factory = ConfigBuilderFactory()
+
+# registering the SQL config
+config_factory.register_config_builder('sql', SQLConfig)
