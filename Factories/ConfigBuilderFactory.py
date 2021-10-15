@@ -1,7 +1,11 @@
 import logging
 
 from package_utils import Singleton
-from DatabaseConnectors import SQLConfig
+
+from DatabaseConnectors import\
+    MySQLConfig,\
+    MSSQLConfig,\
+    PostgreSQLConfig
 
 
 class ConfigBuilderFactory(metaclass=Singleton):
@@ -53,4 +57,6 @@ class ConfigBuilderFactory(metaclass=Singleton):
 config_factory = ConfigBuilderFactory()
 
 # registering the SQL config
-config_factory.register_config_builder('sql', SQLConfig)
+config_factory.register_config_builder('mssql', MSSQLConfig)
+config_factory.register_config_builder('mysql', MySQLConfig)
+config_factory.register_config_builder('postgresql', PostgreSQLConfig)

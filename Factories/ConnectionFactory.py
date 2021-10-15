@@ -2,7 +2,12 @@ import logging
 from beartype import beartype
 
 from package_utils import Singleton
-from BaseClasses import Config, Connection
+from GlobalBaseClasses import Config, Connection
+
+from DatabaseConnectors import \
+    MSSQLConnection,\
+    PostgreSQLConnection,\
+    MySQLConnection
 
 
 class ConnectionFactory(metaclass=Singleton):
@@ -52,3 +57,8 @@ class ConnectionFactory(metaclass=Singleton):
 
 # connection factory instance
 connection_factory = ConnectionFactory()
+
+# register the connections 
+connection_factory.register_connection_builder('mssql', MSSQLConnection)
+connection_factory.register_connection_builder('mysql', MySQLConnection)
+connection_factory.register_connection_builder('postgresql', PostgreSQLConnection)
