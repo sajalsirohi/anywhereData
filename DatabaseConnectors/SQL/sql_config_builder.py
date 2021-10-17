@@ -13,10 +13,12 @@ class SQLConfig(Config):
 
     def __init__(self, config, **options):
         self.config          = config    # connections.yaml
+        self.port            = ""
         self.host            = ""
         self.password        = ""
         self.username        = ""
         self.db_name         = ""
+        self.connection_str  = ""
         logging.info("Now calling the config parsing function")
         self.parse_config()
 
@@ -29,7 +31,9 @@ class SQLConfig(Config):
         self.host            = self.config.get('host')
         self.password        = self.config.get('password')
         self.username        = self.config.get('username')
-        self.db_name         = self.config.get('db_name', 'master')
+        self.db_name         = self.config.get('db_name')
+        self.port            = self.config.get('port')
+        self.connection_str  = self.config.get('connection_str', '')
 
         if self.password == '':
             if 'password_path' in self.config:
@@ -44,4 +48,5 @@ class SQLConfig(Config):
         PASSWORD    : {len(self.password) * "*"}
         USERNAME    : {self.username}
         DB NAME     : {self.db_name}
+        PORT        : {self.port}
         """

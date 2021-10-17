@@ -18,6 +18,7 @@ class MSSQLConnection(SQLConnection):
     def __init__(self, config: MSSQLConfig, connection_name, **options):
         super().__init__(config, connection_name, **options)
         logging.info(f"Connecting to the connection name : {connection_name}")
+        self.config.db_name = config.db_name or "master"
         self.set_connection()
         MSSQLConnection.connection_type = MSSQLConfig.connection_type
 
@@ -60,7 +61,7 @@ class MSSQLConnection(SQLConnection):
 
             try:
                 # create an engine object using the connection string
-                self.engine, self.conn, self.curs \
+                self.engine, self.conn \
                     = connection_generator(config.connection_str, **self.options)
             except Exception as e:
                 logging.info(f"Error occurred using pyodbc, now using pymssql, this is the error -> {e}")

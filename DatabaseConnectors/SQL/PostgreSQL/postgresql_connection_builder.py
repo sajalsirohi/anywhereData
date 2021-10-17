@@ -32,7 +32,7 @@ class PostgreSQLConnection(SQLConnection):
         # optional_params contains something like ?host=/var/lib/postgresql"
         if not config.connection_str:
             config.connection_str = create_uri(
-                drivername="postgresql+psycopg2:",
+                drivername="postgresql+psycopg2",
                 config=config,
                 **self.options
             )

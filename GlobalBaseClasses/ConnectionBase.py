@@ -23,3 +23,7 @@ class Connection(ABC):
     @abstractmethod
     def execute_raw_query(self):
         pass
+
+    @abstractmethod
+    def persist(self, data, to_table, **options):
+        pass

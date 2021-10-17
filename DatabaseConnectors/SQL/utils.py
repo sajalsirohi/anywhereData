@@ -33,12 +33,14 @@ def create_uri(drivername, config: SQLConfig, **options):
     """
     Create the connection URI which is used to create connection object.
     """
+
     return sqlalchemy.engine.url.URL.create(
         drivername=drivername,
         username=config.username,
         password=config.password,
         host=config.host,
         database=config.db_name,
+        port=config.port,
         **options
     )
 
