@@ -1,4 +1,5 @@
 from ..sql_config_builder import SQLConfig
+import logging
 
 __all__ = ["MSSQLConfig"]
 
@@ -12,7 +13,10 @@ class MSSQLConfig(SQLConfig):
 
     def __init__(self, config, **options):
         # calling the super class to initialize the attributes
-        super().__init__(config, **options)
+        super_ = super()
+        super_.__init__(config, **options)
+        super_.parse_config()
+
         self.connection_str  = ""
         self.port            = 1433
         # jdbc driver name or odbc driver name
@@ -26,7 +30,7 @@ class MSSQLConfig(SQLConfig):
         :return:
         """
         self.port            = self.config.get('port', 1433)
-        self.driver_location = self.config.get('driver_location')
+        self.driver_location = self.config.get('driver_location', '')
         self.connect_through = self.config.get('connect_through', 'odbc')
         self.driver          = self.config.get('driver', 'SQL Server')
-        self.connection_str  = self.config.get('connection_str')
+        self.connection_str  = self.config.get('connection_str', '')

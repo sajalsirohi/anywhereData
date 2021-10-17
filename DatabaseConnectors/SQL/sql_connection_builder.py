@@ -1,6 +1,7 @@
-from MSSQL import MSSQLConfig
-from MySQL import MySQLConfig
-from PostgreSQL import PostgreSQLConfig
+from .MSSQL.mssql_config_builder import MSSQLConfig
+from .MySQL.mysql_config_builder import MySQLConfig
+from .PostgreSQL.postgresql_config_builder import PostgreSQLConfig
+
 from GlobalBaseClasses import Connection
 
 import pandas as pd
@@ -50,9 +51,7 @@ class SQLConnection(Connection, ABC):
                 return pd.read_sql_query(query, self.conn)
             else:
                 # execute the query
-                self.curs.execute(query)
-                # commit the transaction
-                self.conn.commit()
+                self.conn.execute(query)
                 return None
         except Exception as err:
             logging.error(f"Error occurred while executing query : {query}, Error stack - {err}")

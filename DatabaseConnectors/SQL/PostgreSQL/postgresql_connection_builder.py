@@ -1,6 +1,6 @@
 import logging
 
-from ..utils import connection_generator
+from ..utils import connection_generator, create_uri
 from beartype import beartype
 
 from .postgresql_config_builder import PostgreSQLConfig
@@ -31,9 +31,11 @@ class PostgreSQLConnection(SQLConnection):
 
         # optional_params contains something like ?host=/var/lib/postgresql"
         if not config.connection_str:
-            config.connection_str = f"postgresql+psycopg2://{config.username}:{config.password}" \
-                                    f"@{config.host}:{config.port}/{config.db_name}?" \
-                                    f"{self.options.get('optional_params', '')}"
+            config.connection_str = create_uri(
+                drivername="postgresql+psycopg2:",
+                config=config,
+                **self.options
+            )
 
-        self.engine, self.conn, self.curs \
+        self.engine, self.conn \
             = connection_generator(config.connection_str, **self.options)

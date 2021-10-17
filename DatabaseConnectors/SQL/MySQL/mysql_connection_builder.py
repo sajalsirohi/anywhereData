@@ -1,6 +1,7 @@
 import logging
+import sqlalchemy
 
-from ..utils import connection_generator
+from ..utils import connection_generator, create_uri
 from beartype import beartype
 
 from .mysql_config_builder import MySQLConfig
@@ -29,8 +30,11 @@ class MySQLConnection(SQLConnection):
         logging.info(f"Connecting to MySQL Server")
 
         if not config.connection_str:
-            config.connection_str = f"mysql+pymysql://{config.username}:{config.password}" \
-                                    f"@{config.host}/{config.db_name}"
+            config.connection_str = create_uri(
+                drivername="mysql+pymysql",
+                config=config,
+                **self.options
+            )
 
-        self.engine, self.conn, self.curs\
+        self.engine, self.conn \
             = connection_generator(config.connection_str, **self.options)

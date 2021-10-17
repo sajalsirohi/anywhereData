@@ -3,7 +3,7 @@ import urllib
 
 from beartype import beartype
 
-from ..utils import connection_generator
+from ..utils import connection_generator, create_uri
 from .mssql_config_builder import MSSQLConfig
 from ..sql_connection_builder import SQLConnection
 
@@ -17,6 +17,7 @@ class MSSQLConnection(SQLConnection):
     @beartype
     def __init__(self, config: MSSQLConfig, connection_name, **options):
         super().__init__(config, connection_name, **options)
+        logging.info(f"Connecting to the connection name : {connection_name}")
         self.set_connection()
         MSSQLConnection.connection_type = MSSQLConfig.connection_type
 
@@ -49,16 +50,26 @@ class MSSQLConnection(SQLConnection):
                           f"{urllib.parse.quote_plus(config.connection_str)}"
             else:
                 # if username and password is given, then use that.
-                if config.username and config.password:
-                    config.connection_str = f"mssql+pyodbc://" \
-                                            f"f{config.username}:{config.password}" \
-                                            f"@{config.host}"
-                # else it will be considered as 'trusted_connection=yes' and username and
-                # password are not required in that case.
-                else:
-                    config.connection_str = f"mssql+pyodbc://" \
-                                            f"@{config.host}"
+                logging.info("Connecting using mssql+pyodbc, let's see if it works")
+                config.connection_str = create_uri(
+                    drivername="mssql+pyodbc",
+                    config=config,
+                    query={"driver": config.driver or "ODBC Driver 17 for SQL Server"},
+                    **self.options
+                )
 
-            # create an engine object using the connection string
-            self.engine, self.conn, self.curs \
-                = connection_generator(config.connection_str, **self.options)
+            try:
+                # create an engine object using the connection string
+                self.engine, self.conn, self.curs \
+                    = connection_generator(config.connection_str, **self.options)
+            except Exception as e:
+                logging.info(f"Error occurred using pyodbc, now using pymssql, this is the error -> {e}")
+                config.connection_str = create_uri(
+                    drivername="mssql+pymssql",
+                    config=config,
+                    **self.options
+                )
+
+                # create the same object, but using different config now.
+                self.engine, self.conn \
+                    = connection_generator(config.connection_str, **self.options)

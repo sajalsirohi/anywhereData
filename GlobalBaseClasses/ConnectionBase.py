@@ -19,3 +19,7 @@ class Connection(ABC):
     A connection type abstract class. 
     """
     connection_name = None
+
+    @abstractmethod
+    def execute_raw_query(self):
+        pass

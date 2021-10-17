@@ -3,8 +3,8 @@ import logging
 from package_utils import Singleton
 
 from DatabaseConnectors import\
+    MSSQLConfig, \
     MySQLConfig,\
-    MSSQLConfig,\
     PostgreSQLConfig
 
 
