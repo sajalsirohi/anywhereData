@@ -1,11 +1,25 @@
-from datetime import datetime as dt
-from .logger import prepare_logging
-from .design_patterns import Singleton
-
 import pathlib
+import os
+from datetime import datetime as dt
+
+from .argument_parser import additional_options
+from .design_patterns import Singleton
+from .logger import prepare_logging
+from .package_utils import read_file, prepare_connection_config, read_config_files
+
 ROOT_DIR = pathlib.Path(__file__).parent.parent.resolve()
+CONFIG_DIR = additional_options.get('config_dir', os.path.join(ROOT_DIR, 'config'))
 
+# is used in log file name
 dt_string = dt.strftime(dt.utcnow(), "%Y-%m-%d_%H_%M_%S")
-prepare_logging(dt_string, ROOT_DIR)
+prepare_logging(dt_string, additional_options.get('log_path', os.path.join(ROOT_DIR, 'logs')))
 
-from .package_utils import read_file
+# read the connection config files
+connections_config = read_config_files(os.path.join(CONFIG_DIR, 'connections.yaml'),
+                                       ignore_error=True,
+                                       key='connections')
+
+# read the tasks yaml file
+tasks_config = read_config_files(os.path.join(CONFIG_DIR, 'tasks.yaml'),
+                                 ignore_error=True,
+                                 key='tasks')

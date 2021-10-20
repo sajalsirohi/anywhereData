@@ -25,5 +25,5 @@ class Connection(ABC):
         pass
 
     @abstractmethod
-    def persist(self, data, to_table, **options):
+    def persist(self, data, to_container, **options):
         pass

@@ -70,17 +70,17 @@ class SQLConnection(Connection, ABC):
         self.current_df = self.execute_raw_query(f"select {options.get('top', '')} * from {table_name} "
                                                  f" {options.get('where', '')} ")
 
-    def persist(self, data, to_table, **options):
+    def persist(self, data, to_container, **options):
         """
         Put the values of df to `to_table`
         :param data:
-        :param to_table:
+        :param to_container:
         :return:
         """
         # legacy code for jdbc. Only supports appending as it manually runs insert commands
         if self.config.connect_through == 'jdbc':
             sym = "'"
-            query = f"INSERT INTO {to_table} VALUES "
+            query = f"INSERT INTO {to_container} VALUES "
             if isinstance(data, pd.DataFrame):
                 for datum in data.values.tolist():
                     query += f"({', '.join([f'{sym}{d}{sym}' for d in datum])}), "
@@ -98,8 +98,8 @@ class SQLConnection(Connection, ABC):
         else:
             assert isinstance(data, pd.DataFrame), f"'data' should be of type pandas df, received type is " \
                                                    f"{type(data)}"
-            logging.info(f'Processing the data to the table {to_table}')
-            data.to_sql(to_table, self.conn, **options)
+            logging.info(f'Processing the data to the table {to_container}')
+            data.to_sql(to_container, self.conn, **options)
 
     def get_columns(self, entity_name):
         """

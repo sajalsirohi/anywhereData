@@ -2,6 +2,7 @@ import json
 import logging
 import traceback
 
+import os
 from os import listdir
 from os.path import isfile, join
 
@@ -62,6 +63,9 @@ def read_file(file_path, extension='yaml', from_directory=False, **options):
                     return final_result
 
     except FileNotFoundError as err:
+        if options.get('ignore_error'):
+            logging.info(f"Ignoring the error of File Not Found")
+            return None
         logging.error(f"File not found at : {file_path}")
         raise err
 
@@ -69,3 +73,25 @@ def read_file(file_path, extension='yaml', from_directory=False, **options):
         logging.error(f"Error occurred while reading the file at path : {file_path}\n Error trace "
                       f"- {traceback.format_exc()}")
         raise err
+
+
+def prepare_connection_config(yaml_config, file_name) -> list:
+    """
+    Returns the config which is acceptable by the connection pool
+    It takes direct yaml_config which is defined in 'connections.yaml'
+    """
+    final_result = []
+    logging.info(f"Starting to prepare the {file_name} config")
+    config = yaml_config[file_name]
+    for connection_name, properties in config.items():
+        logging.info(f"Gathering the config for connection name : {connection_name}")
+        final_result.append(properties)
+    return final_result
+
+
+def read_config_files(file_name, **options):
+    """
+    Read the config files
+    """
+    connections_yaml = read_file(file_name, ignore_error=True, **options)
+    return prepare_connection_config(connections_yaml, options.get('key')) if connections_yaml else None

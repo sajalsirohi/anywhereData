@@ -1,6 +1,6 @@
 import logging
 
-from package_utils import read_file
+from package_utils.package_utils import read_file
 from GlobalBaseClasses import Config
 
 

@@ -18,11 +18,12 @@ class MSSQLConfig(SQLConfig):
         super_.parse_config()
 
         self.connection_str  = ""
-        self.port            = 1433
+        self.port            = ""
         # jdbc driver name or odbc driver name
         self.driver          = ""
         self.driver_location = ""
-        self.connect_through = "odbc"   # Can be jdbc also
+        self.connect_through = ""   # Can be jdbc also
+        self.parse_config()
 
     def parse_config(self):
         """
@@ -32,5 +33,5 @@ class MSSQLConfig(SQLConfig):
         self.port            = self.config.get('port', 1433)
         self.driver_location = self.config.get('driver_location', '')
         self.connect_through = self.config.get('connect_through', 'odbc')
-        self.driver          = self.config.get('driver', 'SQL Server')
+        self.driver          = self.config.get('driver')
         self.connection_str  = self.config.get('connection_str', '')
