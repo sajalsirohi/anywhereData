@@ -19,6 +19,7 @@ class SQLConfig(Config):
         self.username        = ""
         self.db_name         = ""
         self.connection_str  = ""
+        self.connect_through = ""
         logging.info("Now calling the config parsing function")
         self.parse_config()
 

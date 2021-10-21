@@ -1,13 +1,16 @@
-from package_utils import connections_config
-from ConnectionPool import ConnectionPool
+from Tasks.Executor import TaskExecutor
+from Tasks.Creator import TaskPool
 
 
 def main():
     """
     Main driver of the program
     """
-    cp = ConnectionPool(connections_config=connections_config)
-    print(cp.conns['mssql_conn'].execute_raw_query("select * from cars"))
+    te = TaskExecutor()
+    tp = TaskPool()
+    tp.create_task_pool()
+    te.set_task(tp.pool['task_1'])
+    te.execute_task()
 
 
 if __name__ == "__main__":

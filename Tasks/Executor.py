@@ -1,12 +1,12 @@
-import duckdb
-
-from package_utils.design_patterns import Singleton
-from GlobalBaseClasses import Task
-from beartype import beartype
-from ConnectionPool import connection_pool as cp
-
 import logging
+
+import duckdb
 import pandas as pd
+from beartype import beartype
+
+from ConnectionPool import connection_pool as cp
+from package_utils.design_patterns import Singleton
+from .TaskBase import Task
 
 cp = cp.conns
 
@@ -17,7 +17,7 @@ class TaskExecutor(metaclass=Singleton):
     """
 
     @beartype
-    def __init__(self, task: (Task, None), **options):
+    def __init__(self, task: (Task, None) = None, **options):
         self.options    = options
         self.task       = task
         self.final_df   = pd.DataFrame()
@@ -62,9 +62,9 @@ class TaskExecutor(metaclass=Singleton):
         logging.info(f"Logging the final result")
         cp[self.task.target_connection_name].persist(
             self.final_df,
-            container_name=self.task.target_container_name,
+            to_container=self.task.target_container_name,
             if_exists=self.task.save_mode or "replace",
-            **self.task.optional_param
+            **self.task.optional_param or {}
         )
         logging.info(f"Successfully saved the data into the final location. Execution of the task completed.")
 

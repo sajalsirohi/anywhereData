@@ -11,11 +11,10 @@ def connection_generator(connection_str, **options) -> tuple:
     """
     Creates connection object using the connection_str
     :param connection_str:
-    :param options:
     :return:
     """
     try:
-        engine = create_engine(connection_str, **options)
+        engine = create_engine(connection_str)
 
         # create the connection object
         conn = engine.connect()
@@ -41,6 +40,6 @@ def create_uri(drivername, config: SQLConfig, **options):
         host=config.host,
         database=config.db_name,
         port=config.port,
-        **options
+        query=options.get('query')
     )
 

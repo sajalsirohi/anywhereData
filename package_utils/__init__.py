@@ -15,11 +15,7 @@ dt_string = dt.strftime(dt.utcnow(), "%Y-%m-%d_%H_%M_%S")
 prepare_logging(dt_string, additional_options.get('log_path', os.path.join(ROOT_DIR, 'logs')))
 
 # read the connection config files
-connections_config = read_config_files(os.path.join(CONFIG_DIR, 'connections.yaml'),
-                                       ignore_error=True,
-                                       key='connections')
+connections_config = read_config_files(os.path.join(CONFIG_DIR, 'connections.yaml'), key='connections')
 
 # read the tasks yaml file
-tasks_config = read_config_files(os.path.join(CONFIG_DIR, 'tasks.yaml'),
-                                 ignore_error=True,
-                                 key='tasks')
+tasks_config = read_config_files(os.path.join(CONFIG_DIR, 'tasks.yaml'), key='tasks')
