@@ -4,8 +4,9 @@ from package_utils import Singleton
 
 from DatabaseConnectors import\
     MSSQLConfig, \
-    MySQLConfig,\
-    PostgreSQLConfig
+    MySQLConfig, \
+    PostgreSQLConfig, \
+    MongoConfig
 
 
 class ConfigBuilderFactory(metaclass=Singleton):
@@ -60,3 +61,4 @@ config_factory = ConfigBuilderFactory()
 config_factory.register_config_builder('mssql', MSSQLConfig)
 config_factory.register_config_builder('mysql', MySQLConfig)
 config_factory.register_config_builder('postgresql', PostgreSQLConfig)
+config_factory.register_config_builder('mongodb', MongoConfig)

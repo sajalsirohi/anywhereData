@@ -1,14 +1,13 @@
+import logging
+from abc import abstractmethod, ABC
+
+import pandas as pd
+from beartype import beartype
+
+from GlobalBaseClasses import Connection
 from .MSSQL.mssql_config_builder import MSSQLConfig
 from .MySQL.mysql_config_builder import MySQLConfig
 from .PostgreSQL.postgresql_config_builder import PostgreSQLConfig
-
-from GlobalBaseClasses import Connection
-
-import pandas as pd
-import logging
-
-from beartype import beartype
-from abc import abstractmethod, ABC
 
 
 class SQLConnection(Connection, ABC):
@@ -29,14 +28,6 @@ class SQLConnection(Connection, ABC):
         self.current_df      = None
         self.connection_name = connection_name
         self.options         = options
-
-    @abstractmethod
-    def set_connection(self) -> None:
-        """
-        Get SQL curs and conn object for the appropriate environment.
-        :return:
-        """
-        pass
 
     def execute_raw_query(self, query, **options):
         """
@@ -99,7 +90,7 @@ class SQLConnection(Connection, ABC):
             assert isinstance(data, pd.DataFrame), f"'data' should be of type pandas df, received type is " \
                                                    f"{type(data)}"
             logging.info(f'Processing the data to the table {to_container}')
-            data.to_sql(to_container, self.conn, **options)
+            data.to_sql(to_container, self.conn, index=False, if_exists=options['if_exists'])
 
     def get_columns(self, entity_name):
         """

@@ -1,22 +1,47 @@
 tasks:
   task_1:
     # id of the task. Must be unique
-    id                       : task_1
+    id: task_1
     # task description of what this task will achieve
-    task_description         : A test task that is created by sajal
+    task_description: A test task that is created by sajal
     # source connection name
-    source_connection_name   : mssql_conn
+    source_connection_name: mssql_conn
     # target connection name
-    target_connection_name   : postgres_conn
+    target_connection_name: [ mysql_conn, postgres_conn ]
     # query that will be directly executed on the source connection database
-    raw_query                : select * from cars
+    raw_query: select * from cars
     # the alias for the raw query result. You can query this alias
-    raw_alias                : raw_car_alias
+    raw_alias: raw_car_alias
     # stage query. This query to be executed only on aliases
-    stage_query              : select *, 'tata nexon' as car_name from raw_car_alias
+    stage_query: select *, 'tata nexon' as car_name from raw_car_alias
     # the alias for the stage query result
-    stage_alias              : stage_car_alias
+    stage_alias: stage_car_alias
     # target container name
-    target_container_name    : cars_sajal
+    target_container_name: cars_sajal
     # save_mode for the task
-    save_mode                : replace
+    save_mode: append
+  task_2:
+    id: task_2
+    task_description: A mongo db source test task
+    source_connection_name: mongo_conn
+    target_connection_name: mysql_conn
+    raw_query: {}
+    raw_alias: mongo_data
+    stage_query: select *, 'tata nexon' as car_name from mongo_data
+    stage_alias: stage_car_alias
+    target_container_name: sajal_col
+    save_mode: append
+    # optional parameters
+    optional_param:
+      # source collection name in case of mongo db
+      source_collection_name: sajal_col
+  task_3:
+    id: task_3
+    task_description: A mongo db target test task
+    # if you only want to query the stage environment
+    source_connection_name: stagedb
+    target_connection_name: mongo_conn
+    stage_query: select item_name, max_discount, 'tata nexon' as car_name from mongo_data
+    stage_alias: stage_mongo_alias
+    target_container_name: sajal_col
+    save_mode: append

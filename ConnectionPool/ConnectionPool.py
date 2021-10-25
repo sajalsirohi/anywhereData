@@ -67,4 +67,5 @@ class ConnectionPool(metaclass=Singleton):
             self.conns[connection_name] = conn
         print(f"Successfully created the connection pool : {self.conns}")
         logging.info(f"Successfully created the connection pool : {self.conns}")
-
+        # stage db placeholder
+        self.conns['stagedb'] = "just a place holder"

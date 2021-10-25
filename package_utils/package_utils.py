@@ -83,7 +83,7 @@ def prepare_connection_config(yaml_config, file_name) -> list:
     logging.info(f"Starting to prepare the {file_name} config")
     config = yaml_config[file_name]
     for connection_name, properties in config.items():
-        logging.info(f"Gathering the config for connection name : {connection_name}")
+        logging.info(f"Gathering the config for {file_name} name : {connection_name}")
         final_result.append(properties)
     return final_result
 

@@ -4,7 +4,7 @@ import sqlalchemy
 from beartype import beartype
 from sqlalchemy import create_engine
 
-from .sql_config_builder import SQLConfig
+from GlobalBaseClasses import Config
 
 
 def connection_generator(connection_str, **options) -> tuple:
@@ -14,8 +14,10 @@ def connection_generator(connection_str, **options) -> tuple:
     :return:
     """
     try:
-        engine = create_engine(connection_str)
-
+        try:
+            engine = create_engine(connection_str, fast_executemany=options.get('fast_executemany', True))
+        except Exception as err_:
+            engine = create_engine(connection_str)
         # create the connection object
         conn = engine.connect()
 
@@ -28,7 +30,7 @@ def connection_generator(connection_str, **options) -> tuple:
 
 
 @beartype
-def create_uri(drivername, config: SQLConfig, **options):
+def create_uri(drivername, config: Config, **options):
     """
     Create the connection URI which is used to create connection object.
     """

@@ -1,10 +1,9 @@
-from ..sql_config_builder import SQLConfig
-import logging
+from GlobalBaseClasses import Config
 
 __all__ = ["MSSQLConfig"]
 
 
-class MSSQLConfig(SQLConfig):
+class MSSQLConfig(Config):
     __doc__ = """
     Config Builder for microsoft SQL server.
     :param: config: JSON like document containing the details to establish a connection  
@@ -13,25 +12,9 @@ class MSSQLConfig(SQLConfig):
 
     def __init__(self, config, **options):
         # calling the super class to initialize the attributes
-        super_ = super()
-        super_.__init__(config, **options)
-        super_.parse_config()
-
-        self.connection_str  = ""
-        self.port            = ""
+        super().__init__(config, **options)
+        self.port            = self.port or 1433
         # jdbc driver name or odbc driver name
-        self.driver          = ""
-        self.driver_location = ""
-        self.connect_through = ""   # Can be jdbc also
-        self.parse_config()
-
-    def parse_config(self):
-        """
-        Parse the config file and get the details
-        :return:
-        """
-        self.port            = self.config.get('port', 1433)
         self.driver_location = self.config.get('driver_location', '')
         self.connect_through = self.config.get('connect_through', 'odbc')
-        self.driver          = self.config.get('driver')
-        self.connection_str  = self.config.get('connection_str', '')
+        self.driver          = self.config.get('driver', 'ODBC Driver 17 for SQL Server')

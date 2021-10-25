@@ -32,7 +32,7 @@ class TaskExecutor(metaclass=Singleton):
         table_name = self.task.raw_alias if data_type == 'raw_query' else self.task.stage_alias
         # register the table in the globals variable so that when we run duck db query,
         # we are able to find that reference.
-        logging.info(f"Registering table name : {table_name} for top 1 row of data : {data.head(1)}")
+        logging.info(f"Registering table name : {table_name} for top 1 row of data :\n{data.head(1)}")
         globals()[table_name] = data
 
     def execute_query(self, query_type='source'):
@@ -41,16 +41,22 @@ class TaskExecutor(metaclass=Singleton):
         another option can be 'stage' which will execute query on duck db
         """
         if query_type == 'source':
-            logging.info(f"Executing the source raw query")
-            data_df = cp[self.task.source_connection_name].execute_raw_query(self.task.raw_query)
-            # set the final_df which will be stored in the target connection
-            self.final_df = data_df
-            # now register the data in the duck db
-            self._register_data(data_df)
+            if self.task.raw_query or self.task.raw_query == {}:
+                logging.info(f"Executing the source raw query")
+                data_df = cp[self.task.source_connection_name].execute_raw_query(
+                    self.task.raw_query,
+                    **{**self.task.options, **self.task.optional_param}
+                )
+                # set the final_df which will be stored in the target connection
+                logging.info(f"Data count : {len(data_df)} and columns : {list(data_df.columns)}")
+                self.final_df = data_df
+                # now register the data in the duck db
+                self._register_data(data_df)
         elif query_type == 'stage':
             if self.task.stage_query:
-                logging.info(f"Executing the stage query on the duck db : ")
+                logging.info(f"Executing the stage query on the duck db : {self.task.stage_query}")
                 self.final_df = duckdb.query(self.task.stage_query).to_df()
+                logging.info(f"Data count : {len(self.final_df)} and columns : {list(self.final_df.columns)}")
                 self._register_data(self.final_df, 'stage_query')
         else:
             raise ValueError(f"Wrong query_type parameter : {query_type}")
@@ -60,24 +66,29 @@ class TaskExecutor(metaclass=Singleton):
         Save whatever is the final result to the target location
         """
         logging.info(f"Logging the final result")
-        cp[self.task.target_connection_name].persist(
-            self.final_df,
-            to_container=self.task.target_container_name,
-            if_exists=self.task.save_mode or "replace",
-            **self.task.optional_param or {}
-        )
+        if not isinstance(self.task.target_connection_name, list):
+            self.task.target_connection_name = [self.task.target_connection_name]
+        for conn_name in self.task.target_connection_name:
+            logging.info(f"Saving the data in connection name : {conn_name}")
+            cp[conn_name].persist(
+                self.final_df,
+                to_container=self.task.target_container_name,
+                if_exists=self.task.save_mode or "replace",
+                **{**self.task.options, **self.task.optional_param}
+            )
         logging.info(f"Successfully saved the data into the final location. Execution of the task completed.")
 
     def execute_task(self):
         """
         Call this to execute the whole flow of the task, decided by this class, else create your own flow
         """
+        
         logging.info(f"{'*' * 20} Task Execution Started {'*' * 20}")
         logging.info(f"Executing the task : \n {self.task}")
         # first assert that the source_connection_name and target_connection_name mentioned in the task
         # are present in the connection pool or not.
-        assert self.task.source_connection_name in cp and self.task.target_connection_name in cp, \
-            f"Source connection name and target connection name are not present in the connection pool : " \
+        assert self.task.source_connection_name in cp, \
+            f"Source connection name is not present in the connection pool : " \
             f"{cp.conns}"
         # assert there should be a task here
         assert self.task, "self.task is empty yaar. How can it work?"
@@ -95,3 +106,12 @@ class TaskExecutor(metaclass=Singleton):
         Setter for task
         """
         self.task = task
+    
+    @beartype
+    def execute_multiple_tasks(self, tasks: list[Task]):
+        """ 
+        If there are multiple tasks, this will execute it
+        """
+        for task in tasks:
+            self.set_task(task)
+            self.execute_task()

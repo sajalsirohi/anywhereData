@@ -24,9 +24,17 @@ connections:
     password        : Password
     host            : 127.0.0.1
     port            : 13306
+    db_name         : test
   postgres_conn:
     connection_name : postgres_conn
     connection_type : postgresql
     username        : postgres
     password        : docker
     host            : localhost
+  mongo_conn:
+    connection_name : mongo_conn
+    connection_type : mongodb
+    username        : mongoadmin
+    password        : secret
+    host            : localhost
+    db_name         : honey

@@ -12,7 +12,7 @@ class MSSQLConnection(SQLConnection):
     """
     Microsoft SQL connection class for establishing connection
     """
-    connection_type = ""
+    connection_type = "mssql"
 
     @beartype
     def __init__(self, config: MSSQLConfig, connection_name, **options):
@@ -20,7 +20,6 @@ class MSSQLConnection(SQLConnection):
         logging.info(f"Connecting to the connection name : {connection_name}")
         self.config.db_name = config.db_name or "master"
         self.set_connection()
-        MSSQLConnection.connection_type = MSSQLConfig.connection_type
 
     def set_connection(self):
         """

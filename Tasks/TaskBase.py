@@ -32,10 +32,11 @@ class Task:
         # save mode of the data that is extracted. {'fail', 'replace', 'append'},
         self.save_mode = config.get('save_mode')
         # optional parameters will be given here.
-        self.optional_param = config.get('optional_param')
+        self.optional_param = config.get('optional_param', {})
 
     def __str__(self):
         return f"""
+        ID                      : {self.id}
         Task Description        : {self.task_description}
         SRC Conn Name           : {self.source_connection_name}
         TGT Conn Name           : {self.target_connection_name}
@@ -45,4 +46,6 @@ class Task:
         Stage Alias             : {self.stage_alias}
         Target Container Name   : {self.target_container_name}
         Save Mode               : {self.save_mode}
+        Optional Param          : {self.optional_param}
+        Options                 : {self.options}
         """
