@@ -1,15 +1,18 @@
-from Tasks.Executor import TaskExecutor
+from Pipelines import Pipeline
+
 from Tasks.Creator import TaskPool
+from Tasks.Executor import TaskExecutor
 
 
 def main():
     """
     Main driver of the program
     """
-    te = TaskExecutor()
-    tp = TaskPool()
-    tp.create_task_pool()
-    te.execute_multiple_tasks(list(tp.pool.values()))
+    p = Pipeline()
+    p.execute_pipelines()
+    # tp = TaskPool()
+    # tp.create_task_pool()
+    # te = TaskExecutor()
     # te.set_task(tp.pool['task_2'])
     # te.execute_task()
 

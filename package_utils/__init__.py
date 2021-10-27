@@ -19,3 +19,6 @@ connections_config = read_config_files(os.path.join(CONFIG_DIR, 'connections.yam
 
 # read the tasks yaml file
 tasks_config = read_config_files(os.path.join(CONFIG_DIR, 'tasks.yaml'), key='tasks')
+
+# pipeline config yaml file
+pipeline_config = read_config_files(os.path.join(CONFIG_DIR, 'pipeline.yaml'), key='pipeline')

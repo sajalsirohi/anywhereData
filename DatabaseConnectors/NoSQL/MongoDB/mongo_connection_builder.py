@@ -65,6 +65,7 @@ class MongoConnection(NoSQLConnection):
         data = self.collection_obj.find(query, options.get('fields'))
         logging.info(f'Iterating over the data set now to convert it into a pandas dataframe from {self.collection_obj}')
         for datum in data:
+            datum['_id'] = str(datum['_id'])
             # flatten the dict. It will always be flattened before converting it into a pandas df
             datum   = nested_to_record(datum, sep='_')
             # convert it into a pandas df
