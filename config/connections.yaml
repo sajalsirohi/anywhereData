@@ -38,3 +38,9 @@ connections:
     password        : secret
     host            : localhost
     db_name         : honey
+  dynamo_conn:
+    connection_name : dynamo_conn
+    connection_type : dynamodb
+    # all other connection related information should be stored in either
+    # env variables, or in ~/.aws/config
+    table           : test_table

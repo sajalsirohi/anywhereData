@@ -82,7 +82,7 @@ def prepare_connection_config(yaml_config, file_name) -> list:
     final_result = []
     logging.info(f"Starting to prepare the {file_name} config")
     config = yaml_config[file_name]
-    if file_name != 'pipeline':
+    if file_name not in ['pipeline', 'test']:
         for connection_name, properties in config.items():
             logging.info(f"Gathering the config for {file_name} name : {connection_name}")
             final_result.append(properties)

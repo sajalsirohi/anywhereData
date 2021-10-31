@@ -8,7 +8,8 @@ from DatabaseConnectors import \
     MSSQLConnection,\
     PostgreSQLConnection,\
     MySQLConnection, \
-    MongoConnection
+    MongoConnection, \
+    DynamoConnection
 
 
 class ConnectionFactory(metaclass=Singleton):
@@ -64,3 +65,4 @@ connection_factory.register_connection_builder('mssql', MSSQLConnection)
 connection_factory.register_connection_builder('mysql', MySQLConnection)
 connection_factory.register_connection_builder('postgresql', PostgreSQLConnection)
 connection_factory.register_connection_builder('mongodb', MongoConnection)
+connection_factory.register_connection_builder('dynamodb', DynamoConnection)

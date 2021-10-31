@@ -29,7 +29,7 @@ class SQLConnection(Connection, ABC):
         self.connection_name = connection_name
         self.options         = options
 
-    def execute_raw_query(self, query, **options):
+    def get_data(self, query, **options):
         """
         Execute the query
         :param query:
@@ -58,10 +58,10 @@ class SQLConnection(Connection, ABC):
         :param options:
         :return:
         """
-        self.current_df = self.execute_raw_query(f"select {options.get('top', '')} * from {table_name} "
+        self.current_df = self.get_data(f"select {options.get('top', '')} * from {table_name} "
                                                  f" {options.get('where', '')} ")
 
-    def persist(self, data, to_container, **options):
+    def send_data(self, data, to_container, **options):
         """
         Put the values of df to `to_table`
         :param data:
@@ -85,7 +85,7 @@ class SQLConnection(Connection, ABC):
                 else:
                     query += f"({', '.join([f'{sym}{d}{sym}' for d in data])}), "
             query = query[0:-2]
-            self.execute_raw_query(query)
+            self.get_data(query)
         else:
             assert isinstance(data, pd.DataFrame), f"'data' should be of type pandas df, received type is " \
                                                    f"{type(data)}"

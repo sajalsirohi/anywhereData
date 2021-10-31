@@ -5,6 +5,7 @@ from beartype import beartype
 
 from GlobalBaseClasses import Connection
 from .MongoDB.mongo_config_builder import MongoConfig
+from .DynamoDB.dynamo_config_builder import DynamoConfig
 
 
 class NoSQLConnection(Connection, ABC):
@@ -13,7 +14,7 @@ class NoSQLConnection(Connection, ABC):
     """
     @beartype
     def __init__(self,
-                 config: MongoConfig,
+                 config: (MongoConfig, DynamoConfig),
                  connection_name,
                  **options):
         logging.info(f"Connecting to NoSQL server with config : \n {config}")
@@ -23,7 +24,7 @@ class NoSQLConnection(Connection, ABC):
         self.options         = options
 
     @beartype
-    def execute_raw_query(self, query: dict, **options):
+    def get_data(self, query: dict, **options):
         """
         Execute the query
         :param query:
@@ -40,7 +41,7 @@ class NoSQLConnection(Connection, ABC):
             else:
                 raise err
 
-    def persist(self, data, to_container, **options):
+    def send_data(self, data, to_container, **options):
         """
         Put the values of df to `to_table`
         :param data:

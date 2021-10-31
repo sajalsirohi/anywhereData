@@ -36,7 +36,7 @@ class Config:
     def __str__(self):
         return f"""
         HOST NAME   : {self.host}
-        PASSWORD    : {len(self.password) * "*"}
+        PASSWORD    : {len(self.password or '') * "*"}
         USERNAME    : {self.username}
         DB NAME     : {self.db_name}
         PORT        : {self.port}
@@ -50,12 +50,12 @@ class Connection(ABC):
     connection_name = None
 
     @abstractmethod
-    def execute_raw_query(self, query, **options):
+    def get_data(self, query, **options):
         pass
 
     @abstractmethod
     @beartype
-    def persist(self, data: pd.DataFrame, to_container, **options):
+    def send_data(self, data: pd.DataFrame, to_container, **options):
         pass
 
     @abstractmethod

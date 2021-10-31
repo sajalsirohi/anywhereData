@@ -45,3 +45,27 @@ tasks:
     stage_alias: stage_mongo_alias
     target_container_name: sajal_col
     save_mode: append
+  task_4:
+    id: task_4
+    task_description: DynamoDB to SQL connection test task
+    source_connection_name: dynamo_conn
+    target_connection_name: mssql_conn
+    # Query in json format, that will be directly passed to resource('dynamodb').Table.scan()
+    raw_query: {}
+    raw_alias: dynamo_alias
+    target_container_name: dynamo_table
+    save_mode: replace
+  task_5:
+    id: task_5
+    task_description: SQL to dynamo db task
+    source_connection_name: stagedb
+    target_connection_name: [dynamo_conn, mongo_conn, postgres_conn]
+    stage_query: select * , 'sql value is here' as sql_value from dynamo_alias limit 300
+    target_container_name: sql_table
+    save_mode: replace
+    optional_param:
+      # automatically create a new id for every other entry, if there is no unique id present.
+      # this is required as when sending data to dynamodb using batch.writer process, each batch
+      # should have unique partition_key. So either have a predefined partition_key with high cardinality,
+      # else set this option to true to dynamically create the same, and this will add '_id' to each entry
+      automatic_id: true

@@ -43,7 +43,7 @@ class TaskExecutor(metaclass=Singleton):
         if query_type == 'source':
             if self.task.raw_query or self.task.raw_query == {}:
                 logging.info(f"Executing the source raw query")
-                data_df = cp[self.task.source_connection_name].execute_raw_query(
+                data_df = cp[self.task.source_connection_name].get_data(
                     self.task.raw_query,
                     **{**self.task.options, **self.task.optional_param}
                 )
@@ -70,7 +70,7 @@ class TaskExecutor(metaclass=Singleton):
             self.task.target_connection_name = [self.task.target_connection_name]
         for conn_name in self.task.target_connection_name:
             logging.info(f"Saving the data in connection name : {conn_name}")
-            cp[conn_name].persist(
+            cp[conn_name].send_data(
                 self.final_df,
                 to_container=self.task.target_container_name,
                 if_exists=self.task.save_mode or "replace",

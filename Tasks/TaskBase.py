@@ -34,6 +34,25 @@ class Task:
         # optional parameters will be given here.
         self.optional_param = config.get('optional_param', {})
 
+        # if there are any other values defined other than the expected keys, this will put all those
+        # key values in 'optional_param' so that it is still accessible.
+        other_values = {key: value for key, value in config.items() if key not in
+                        [
+                            'id',
+                            'task_description',
+                            'source_connection_name',
+                            'target_connection_name',
+                            'raw_query',
+                            'raw_alias',
+                            'stage_query',
+                            'stage_alias',
+                            'target_container_name',
+                            'save_mode',
+                            'optional_param'
+                        ]
+                        }
+        self.optional_param = {**other_values, **self.optional_param}
+
     def __str__(self):
         return f"""
         ID                      : {self.id}
