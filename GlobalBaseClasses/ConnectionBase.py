@@ -43,6 +43,30 @@ class Config:
         """
 
 
+class FileStorageConfig(Config):
+    __doc__ = """
+    Base class for File config, as it will have different configs requirement,
+    which is passed onto to connection factory, to establish a 
+    connection.
+    """
+    # connection type info which is passed into every class that implements this class
+    connection_type = None
+
+    def __init__(self, config, **options):
+        super().__init__(config, **options)
+        self.file_name      = config.get('file_name')
+        self.file_dir_path  = config.get('file_dir_path')
+        self.sep            = config.get('sep', ',')
+
+        # name of the azure blob container or the s3 bucket name
+        self.s3_bucket = self.container = config.get('container', config.get('s3_bucket'))
+
+    def __str__(self):
+        return f"File Name      : {self.file_name}" \
+               f"File Dir Path  : {self.file_dir_path}" \
+               f"Container Name : {self.s3_bucket}"
+
+
 class Connection(ABC):
     __doc__ = """
     A connection type abstract class. 

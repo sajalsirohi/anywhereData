@@ -44,3 +44,9 @@ connections:
     # all other connection related information should be stored in either
     # env variables, or in ~/.aws/config
     table           : test_table
+  local_conn:
+    connection_name : local_conn
+    connection_type : local
+    file_dir_path   : C:\Users\siroh\Downloads\data
+    file_name       : data.csv
+    sep             : ,
