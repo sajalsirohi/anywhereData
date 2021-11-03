@@ -1,7 +1,6 @@
 import logging
 import os
 
-import json
 import pandas as pd
 from beartype import beartype
 
@@ -42,19 +41,17 @@ class LocalConnection(Connection):
         # read all the files from the given directory. as of now let's do csv only
         else:
             for file in os.listdir(self.config.file_dir_path):
-                files_to_read.append(os.path.join(self.config.file_dir_path, file))
+                if file.endswith(".csv"):
+                    files_to_read.append(os.path.join(self.config.file_dir_path, file))
         logging.info(f"Going to read the files : {files_to_read}")
         result = pd.concat(map(pd.read_csv, files_to_read), ignore_index=True)
         logging.info(f"Successfully read the files, this is the header : {result.columns}")
         return result
 
-    def send_data(self, data, to_container, **options):
+    def send_data(self, data, to_container=None, **options):
         """
         An abstract method that will be overwritten by the derived class
         """
-        logging.info('Converting data into json format')
-        json_data = json.loads(data.to_json(orient='records'))
-        logging.info(f'Creating the container object for container : {to_container}')
-        collection = self.database_obj[to_container]
-        logging.info("Now inserting the data")
-        collection.insert_many(json_data)
+        to_container = to_container or self.config.file_dir_path
+        assert os.path.isdir(to_container), \
+            f"File directory is not present : {to_container}"
