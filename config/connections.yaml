@@ -8,7 +8,7 @@ connections:
     connection_type : mssql
     # if trusted connection is supposed to be yes skip this info
     username        : sa
-    password        : Str0ngPa$$w0rd
+    password        : Str0ngPa36628w0rd
     # host or the server address
     host            : localhost
     # connect through either jdbc or odbc
@@ -21,9 +21,9 @@ connections:
     connection_name : mysql_conn
     connection_type : mysql
     username        : root
-    password        : Password
+    password        : good_soup
     host            : 127.0.0.1
-    port            : 13306
+    port            : 3306
     db_name         : test
   postgres_conn:
     connection_name : postgres_conn
@@ -47,6 +47,6 @@ connections:
   local_conn:
     connection_name : local_conn
     connection_type : local
-    file_dir_path   : C:\Users\siroh\Downloads\data
-    file_name       : data.csv
-    sep             : ,
+    file_dir_path   : /Users/ssirohi3/personal/data
+#    file_name       : hello.csv
+    sep             : ","

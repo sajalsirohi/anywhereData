@@ -7,7 +7,8 @@ from DatabaseConnectors import\
     MySQLConfig, \
     PostgreSQLConfig, \
     MongoConfig, \
-    DynamoConfig
+    DynamoConfig, \
+    LocalFileConfig
 
 
 class ConfigBuilderFactory(metaclass=Singleton):
@@ -64,3 +65,4 @@ config_factory.register_config_builder('mysql', MySQLConfig)
 config_factory.register_config_builder('postgresql', PostgreSQLConfig)
 config_factory.register_config_builder('mongodb', MongoConfig)
 config_factory.register_config_builder('dynamodb', DynamoConfig)
+config_factory.register_config_builder('local', LocalFileConfig)

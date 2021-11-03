@@ -46,7 +46,7 @@ class TaskExecutor(metaclass=Singleton):
                     or self.task.optional_param.get('file_task', False) is True:
                 logging.info(f"Executing the source raw query")
                 data_df = cp[self.task.source_connection_name].get_data(
-                    self.task.raw_query or '',
+                    self.task.raw_query or {},
                     **{**self.task.options, **self.task.optional_param}
                 )
                 # set the final_df which will be stored in the target connection

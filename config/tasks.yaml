@@ -57,9 +57,9 @@ tasks:
     save_mode: replace
   task_5:
     id: task_5
-    task_description: SQL to dynamo db task
+    task_description: duckdb to dynamo db task
     source_connection_name: stagedb
-    target_connection_name: [dynamo_conn, mongo_conn, postgres_conn]
+    target_connection_name: [mongo_conn, postgres_conn, local_conn]
     stage_query: select * , 'sql value is here' as sql_value from dynamo_alias limit 300
     target_container_name: sql_table
     save_mode: replace
@@ -69,3 +69,15 @@ tasks:
       # should have unique partition_key. So either have a predefined partition_key with high cardinality,
       # else set this option to true to dynamically create the same, and this will add '_id' to each entry
       automatic_id: true
+  task_6:
+    id: task_6
+    task_description: CSV File to multiple connections
+    # if it is a file task, mention this as true, so in this case, query will not be used, only direct data will be
+    # read from connection mentioned
+    file_task: True
+    # this will take preference over the dir path mentioned in 'local_conn'
+    file_dir_path: /Users/ssirohi3/personal/data
+    source_connection_name: local_conn
+    target_connection_name: [mssql_conn, postgres_conn, mongo_conn]
+    target_container_name: CSV_Table
+    save_mode: replace

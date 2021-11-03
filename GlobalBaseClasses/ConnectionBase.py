@@ -54,8 +54,8 @@ class FileStorageConfig(Config):
 
     def __init__(self, config, **options):
         super().__init__(config, **options)
-        self.file_name      = config.get('file_name')
-        self.file_dir_path  = config.get('file_dir_path')
+        self.file_name      = config.get('file_name', '')
+        self.file_dir_path  = config.get('file_dir_path', '')
         self.sep            = config.get('sep', ',')
 
         # name of the azure blob container or the s3 bucket name
