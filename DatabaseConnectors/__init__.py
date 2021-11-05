@@ -9,6 +9,7 @@ from .NoSQL.DynamoDB.dynamo_config_builder import DynamoConfig
 
 # Import FileStorage config builders
 from .FileStorage.Local.local_config_builder import LocalFileConfig
+from .FileStorage.S3.s3_config_builder import S3Config
 
 # Import SQL related connection builders
 from .SQL.MSSQL.mssql_connection_builder import MSSQLConnection
@@ -21,3 +22,4 @@ from .NoSQL.DynamoDB.dynamo_connection_builder import DynamoConnection
 
 # Import FileStorage related connection builders
 from .FileStorage.Local.local_connection_builder import LocalConnection
+from .FileStorage.S3.s3_connection_builder import S3Connection

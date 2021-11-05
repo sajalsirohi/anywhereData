@@ -10,7 +10,8 @@ from DatabaseConnectors import \
     MySQLConnection, \
     MongoConnection, \
     DynamoConnection, \
-    LocalConnection
+    LocalConnection, \
+    S3Connection
 
 
 class ConnectionFactory(metaclass=Singleton):
@@ -68,3 +69,4 @@ connection_factory.register_connection_builder('postgresql', PostgreSQLConnectio
 connection_factory.register_connection_builder('mongodb', MongoConnection)
 connection_factory.register_connection_builder('dynamodb', DynamoConnection)
 connection_factory.register_connection_builder('local', LocalConnection)
+connection_factory.register_connection_builder('s3', S3Connection)

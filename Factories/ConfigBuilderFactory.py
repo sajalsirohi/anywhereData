@@ -8,7 +8,8 @@ from DatabaseConnectors import\
     PostgreSQLConfig, \
     MongoConfig, \
     DynamoConfig, \
-    LocalFileConfig
+    LocalFileConfig, \
+    S3Config
 
 
 class ConfigBuilderFactory(metaclass=Singleton):
@@ -66,3 +67,4 @@ config_factory.register_config_builder('postgresql', PostgreSQLConfig)
 config_factory.register_config_builder('mongodb', MongoConfig)
 config_factory.register_config_builder('dynamodb', DynamoConfig)
 config_factory.register_config_builder('local', LocalFileConfig)
+config_factory.register_config_builder('s3', S3Config)

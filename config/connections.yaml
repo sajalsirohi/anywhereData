@@ -48,5 +48,8 @@ connections:
     connection_name : local_conn
     connection_type : local
     file_dir_path   : /Users/ssirohi3/personal/data
-#    file_name       : hello.csv
+    file_name       : hello.csv
     sep             : ","
+  s3_data_conn:
+    connection_name : s3_data_conn
+    connection_type : s3
