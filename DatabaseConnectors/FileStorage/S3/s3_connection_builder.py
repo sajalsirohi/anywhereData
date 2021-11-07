@@ -47,10 +47,8 @@ class S3Connection(Connection):
             # create a temporary directory and then download all the files there
             response = self.client.list_objects(Bucket=self.config.s3_bucket, Prefix=self.config.prefix)
             s3_objects = [obj["Key"] for obj in response["Contents"]]
-            print(s3_objects)
             for s3_file in s3_objects:
                 if not s3_file.endswith("/"):
-                    print(tempdir)
                     temp_str = s3_file.replace(self.config.prefix or '', "")
                     local_file_path = os.path.join(tempdir, temp_str)
                     logging.info(f"Local file path : {local_file_path} \ns3_file : {s3_file}")
@@ -69,7 +67,8 @@ class S3Connection(Connection):
             logging.info(f"Going to read the files : {files_to_read}")
             result = pd.concat(map(pd.read_csv, files_to_read), ignore_index=True)
             logging.info(
-                f"Successfully read the files, count : {len(result)} and this is the header : {result.columns}")
+                f"Successfully read the files, count : {len(result)} and this is the header : {result.columns}"
+            )
 
         return result
 

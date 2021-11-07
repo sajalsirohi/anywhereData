@@ -13,7 +13,7 @@ class S3Config(FileStorageConfig):
     def __init__(self, config, **options):
         # calling the super class to initialize the attributes
         super().__init__(config, **options)
-        self.prefix     = options.get("prefix")
+        self.prefix = options.get("prefix")
 
     def __str__(self):
         return f"{super().__str__()} " \
