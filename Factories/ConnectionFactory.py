@@ -9,7 +9,6 @@ from DatabaseConnectors import \
     PostgreSQLConnection,\
     MySQLConnection, \
     MongoConnection, \
-    DynamoConnection, \
     LocalConnection, \
     S3Connection
 
@@ -67,6 +66,5 @@ connection_factory.register_connection_builder('mssql', MSSQLConnection)
 connection_factory.register_connection_builder('mysql', MySQLConnection)
 connection_factory.register_connection_builder('postgresql', PostgreSQLConnection)
 connection_factory.register_connection_builder('mongodb', MongoConnection)
-connection_factory.register_connection_builder('dynamodb', DynamoConnection)
 connection_factory.register_connection_builder('local', LocalConnection)
 connection_factory.register_connection_builder('s3', S3Connection)

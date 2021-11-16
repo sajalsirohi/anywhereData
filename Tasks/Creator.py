@@ -16,6 +16,12 @@ class TaskPool(metaclass=Singleton):
         self.options = options
         self.pool = {}
 
+    def __getitem__(self, task_id):
+        """
+        Get the task info using the task name
+        """
+        return self.pool[task_id]
+
     def create_task_pool(self):
         """
         Create the task pool

@@ -1,5 +1,6 @@
 import logging
 
+from GlobalBaseClasses import Connection
 from package_utils import Singleton
 from beartype import beartype
 
@@ -30,6 +31,12 @@ class ConnectionPool(metaclass=Singleton):
         self.conns = {}
         # create the connection pool
         self.create_connection_pool()
+
+    def __getitem__(self, connection_name) -> Connection:
+        """
+        Return the connection type associated from .conns
+        """
+        return self.conns[connection_name]
 
     def set_connections_config(self, connections_config: list):
         """

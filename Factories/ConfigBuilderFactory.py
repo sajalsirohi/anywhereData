@@ -7,7 +7,6 @@ from DatabaseConnectors import\
     MySQLConfig, \
     PostgreSQLConfig, \
     MongoConfig, \
-    DynamoConfig, \
     LocalFileConfig, \
     S3Config
 
@@ -65,6 +64,5 @@ config_factory.register_config_builder('mssql', MSSQLConfig)
 config_factory.register_config_builder('mysql', MySQLConfig)
 config_factory.register_config_builder('postgresql', PostgreSQLConfig)
 config_factory.register_config_builder('mongodb', MongoConfig)
-config_factory.register_config_builder('dynamodb', DynamoConfig)
 config_factory.register_config_builder('local', LocalFileConfig)
 config_factory.register_config_builder('s3', S3Config)
