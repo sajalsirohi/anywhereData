@@ -86,6 +86,7 @@ class SQLConnection(Connection, ABC):
         :param to_container:
         :return:
         """
+        print(data.rdd.getNumPartitions())
         logging.info(f"Sending the data to the connection name: {self.connection_name},"
                      f" with schema : {data.schema}, \nto table : {to_container}, jdbc_url : {self.jdbc_url}")
         data.show(10, truncate=False)

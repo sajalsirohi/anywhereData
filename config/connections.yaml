@@ -26,6 +26,7 @@ connections:
     port            : 3306
     db_name         : test
     driver          : com.mysql.cj.jdbc.Driver
+    properties      : ?rewriteBatchedStatements=true
   postgres_conn:
     connection_name : postgres_conn
     connection_type : postgresql

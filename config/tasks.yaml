@@ -11,7 +11,7 @@ tasks :
     # source connection name
     source_connection_name : local_conn
     # target connection name
-    target_connection_name : [ mssql_conn, mysql_conn, postgres_conn ]
+    target_connection_name : [ mongo_conn, mssql_conn, mysql_conn, postgres_conn ]
     # the alias for the raw query result. You can query this alias
     raw_alias              : sample_data_alias
     # stage query. This query to be executed only on aliases

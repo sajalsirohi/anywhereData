@@ -38,10 +38,12 @@ class MongoConnection(NoSQLConnection):
         An abstract method that will be overwritten by the derived class
         """
         logging.info(f"Sending data to mongodb")
+        # only for debugging.
         data.write\
             .format("mongo")\
-            .mode(options.get('mode' or "append"))\
-            .options(**options.get('spark_write_options'))\
+            .mode('append' or options.get('mode'))\
+            .options(**{**{"user": self.config.username, "password": self.config.password},
+                        **options.get('spark_write_options', {})})\
             .save()
         logging.info("Successfully sent it :D")
 
