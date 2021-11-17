@@ -24,31 +24,46 @@ tasks :
     save_mode              : append
     spark_write_additional_parameters : {}
     spark_read_additional_parameters : {}
-#  task_2 :
-#    id                     : task_2
-#    task_description       : A mongo db source test task
-#    source_connection_name : mongo_conn
-#    target_connection_name : mysql_conn
-#    raw_query              : { }
-#    raw_alias              : mongo_data
-#    stage_query            : select *, 'Mongo DB Data' as Mongo_Column from mongo_data
-#    stage_alias            : different_alias
-#    target_container_name  : sajal_col
-#    save_mode              : replace
+  task_2 :
+    id                     : task_2
+    task_description       : A mssql to mysql task description
+    source_connection_name : mssql_conn
+    target_connection_name : mysql_conn
+    raw_query              : >
+                           select *, row_number() over (partition by names order by category) as rnk
+                           from sample_data_sajal
+    raw_alias              : transformed_data
+    stage_query            : select *, 'This data is really transformed' as new_col_stg from transformed_data
+    stage_alias            : different_alias
+    target_container_name  : task2_table
+    save_mode              : overwrite
 #    # optional parameters
 #    optional_param         :
 #      # source collection name in case of mongo db
 #      source_collection_name : sajal_col
-#  task_3 :
-#    id                     : task_3
-#    task_description       : A mongo db target test task
-#    # if you only want to query the stage environment
-#    source_connection_name : stagedb
-#    target_connection_name : mongo_conn
-#    stage_query            : select item_name, max_discount, 'tata nexon' as car_name from mongo_data
-#    stage_alias            : stage_mongo_alias
-#    target_container_name  : sajal_col
-#    save_mode              : append
+  task_3 :
+    id                                : task_3
+    task_description                  : A GB File test
+    # if you only want to query the stage environment
+    file_task                         : True
+    file_dir_path                     : /Users/ssirohi3/personal/bowl
+    #    file_name              : sample_file.csv
+    # source connection name
+    source_connection_name            : local_conn
+    # target connection name
+    target_connection_name            : [ mongo_conn, mssql_conn, mysql_conn, postgres_conn ]
+    # the alias for the raw query result. You can query this alias
+    raw_alias                         : sample_data_alias
+    # stage query. This query to be executed only on aliases
+    stage_query                       : select *, 'Its a custom column' as car_name, current_timestamp as insert_time from sample_data_alias
+    # the alias for the stage query result
+    stage_alias                       : stage_data_alias
+    # target container name
+    target_container_name             : nfl_bowl_data
+    # save_mode for the task
+    save_mode                         : overwrite
+    spark_write_additional_parameters : { }
+    spark_read_additional_parameters  : { }
 #  task_4 :
 #    id                     : task_4
 #    task_description       : DynamoDB to SQL connection test task
