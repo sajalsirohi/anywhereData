@@ -11,12 +11,12 @@ connections:
     password        : Str0ngPa36628w0rd
     # host or the server address
     host            : localhost
-    # connect through either jdbc or odbc
-    connect_through : odbc
     # if using jdbc, define the .jar location
     driver_location : ""
     # odbc driver name if using odbc, else give jdbc driver name
-    driver          : ODBC Driver 17 for SQL Server
+    driver          : com.microsoft.sqlserver.jdbc.SQLServerDriver
+    # properties, like ssl=true&loglevel=2, or anything else that you need to be appended to the end of your jdbc url
+    properties      : ''
   mysql_conn:
     connection_name : mysql_conn
     connection_type : mysql
@@ -31,6 +31,7 @@ connections:
     username        : postgres
     password        : docker
     host            : localhost
+    properties      : ?ssl=true&loglevel=2
   mongo_conn:
     connection_name : mongo_conn
     connection_type : mongodb
@@ -38,17 +39,11 @@ connections:
     password        : secret
     host            : localhost
     db_name         : honey
-  dynamo_conn:
-    connection_name : dynamo_conn
-    connection_type : dynamodb
-    # all other connection related information should be stored in either
-    # env variables, or in ~/.aws/config
-    table           : test_table
   local_conn:
     connection_name : local_conn
     connection_type : local
-    file_dir_path   : /Users/ssirohi3/personal/data
-    file_name       : hello.csv
+#    file_dir_path   : /Users/ssirohi3/personal/data
+#    file_name       : hello.csv
     sep             : ","
   s3_data_conn:
     connection_name : s3_data_conn

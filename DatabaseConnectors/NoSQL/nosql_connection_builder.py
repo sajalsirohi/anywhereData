@@ -5,7 +5,6 @@ from beartype import beartype
 
 from GlobalBaseClasses import Connection
 from .MongoDB.mongo_config_builder import MongoConfig
-from .DynamoDB.dynamo_config_builder import DynamoConfig
 
 
 class NoSQLConnection(Connection, ABC):
@@ -14,7 +13,7 @@ class NoSQLConnection(Connection, ABC):
     """
     @beartype
     def __init__(self,
-                 config: (MongoConfig, DynamoConfig),
+                 config: MongoConfig,
                  connection_name,
                  **options):
         logging.info(f"Connecting to NoSQL server with config : \n {config}")
@@ -22,6 +21,7 @@ class NoSQLConnection(Connection, ABC):
         self.current_df      = None
         self.connection_name = connection_name
         self.options         = options
+        self.jdbc_url        = 'Not as of now'
 
     @beartype
     def get_data(self, query: dict, **options):

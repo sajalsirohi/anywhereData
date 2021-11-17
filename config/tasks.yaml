@@ -4,107 +4,111 @@ tasks :
     id                     : task_1
     # task description of what this task will achieve
     task_description       : A test task that is created by sajal
+    # as it is a file task, set it to true
+    file_task              : True
+    file_dir_path          : /Users/ssirohi3/personal/bigdata
+#    file_name              : sample_file.csv
     # source connection name
-    source_connection_name : mssql_conn
+    source_connection_name : local_conn
     # target connection name
-    target_connection_name : [ mysql_conn, postgres_conn, mongo_conn ]
-    # query that will be directly executed on the source connection database
-    raw_query              : select * from cars
+    target_connection_name : [ mysql_conn, postgres_conn, mssql_conn ]
     # the alias for the raw query result. You can query this alias
-    raw_alias              : raw_car_alias
+    raw_alias              : sample_data_alias
     # stage query. This query to be executed only on aliases
-    stage_query            : select *, 'tata nexon' as car_name, current_timestamp as insert_time from raw_car_alias
+    stage_query            : select *, 'tata nexon' as car_name, current_timestamp as insert_time from sample_data_alias
     # the alias for the stage query result
-    stage_alias            : stage_car_alias
+    stage_alias            : stage_data_alias
     # target container name
-    target_container_name  : cars_sajal
+    target_container_name  : sample_data_sajal
     # save_mode for the task
     save_mode              : append
-  task_2 :
-    id                     : task_2
-    task_description       : A mongo db source test task
-    source_connection_name : mongo_conn
-    target_connection_name : mysql_conn
-    raw_query              : { }
-    raw_alias              : mongo_data
-    stage_query            : select *, 'Mongo DB Data' as Mongo_Column from mongo_data
-    stage_alias            : different_alias
-    target_container_name  : sajal_col
-    save_mode              : replace
-    # optional parameters
-    optional_param         :
-      # source collection name in case of mongo db
-      source_collection_name : sajal_col
-  task_3 :
-    id                     : task_3
-    task_description       : A mongo db target test task
-    # if you only want to query the stage environment
-    source_connection_name : stagedb
-    target_connection_name : mongo_conn
-    stage_query            : select item_name, max_discount, 'tata nexon' as car_name from mongo_data
-    stage_alias            : stage_mongo_alias
-    target_container_name  : sajal_col
-    save_mode              : append
-  task_4 :
-    id                     : task_4
-    task_description       : DynamoDB to SQL connection test task
-    source_connection_name : dynamo_conn
-    target_connection_name : mssql_conn
-    # Query in json format, that will be directly passed to resource('dynamodb').Table.scan()
-    raw_query              : { }
-    raw_alias              : dynamo_alias
-    target_container_name  : dynamo_table
-    save_mode              : replace
-  task_5 :
-    id                     : task_5
-    task_description       : duckdb to dynamo db task
-    source_connection_name : stagedb
-    target_connection_name : [ mongo_conn, postgres_conn, local_conn ]
-    stage_query            : select * , 'sql value is here' as sql_value from dynamo_alias limit 300
-    target_container_name  : sql_table
-    save_mode              : replace
-    optional_param         :
-      # automatically create a new id for every other entry, if there is no unique id present.
-      # this is required as when sending data to dynamodb using batch.writer process, each batch
-      # should have unique partition_key. So either have a predefined partition_key with high cardinality,
-      # else set this option to true to dynamically create the same, and this will add '_id' to each entry
-      automatic_id : true
-  task_6 :
-    id                     : task_6
-    task_description       : CSV File to multiple connections
-    # if it is a file task, mention this as true, so in this case, query will not be used, only direct data will be
-    # read from connection mentioned
-    file_task              : True
-    # this will take preference over the dir path mentioned in 'local_conn'
-    file_dir_path          : /Users/ssirohi3/personal/data
-    raw_alias              : s3_csv
-    source_connection_name : local_conn
-    target_connection_name : [ mssql_conn, postgres_conn, mongo_conn ]
-    target_container_name  : CSV_Table
-    save_mode              : replace
-  task_7 :
-    id                     : task_7
-    task_description       : CSV File to S3 location
-    source_connection_name : stagedb
-    target_connection_name : s3_data_conn
-    stage_query            : select *, 'S3 CSV Data' as csv_column from s3_csv
-    stage_alias            : s3_alias
-    # name of the s3 bucket where we going to either store and get the data from
-    s3_bucket              : testbucksajal
-    # prefix where the file is
-    prefix                 : data/
-    # if storing the file, what is the name of the file
-    file_name              : data.csv
-  task_8 :
-    id                     : task_8
-    file_task              : True
-    task_description       : S3 file to multiple data location
-    source_connection_name : s3_data_conn
-    s3_bucket              : testbucksajal
-    prefix                 : data/
-    raw_alias              : s3_data
-    stage_query            : select *, 'S3 CSV' as new_s3_column from s3_data
-    stage_alias            : good_alias
-    target_connection_name : [ mongo_conn, mssql_conn, mysql_conn ]
-    target_container_name  : s3_table
-    save_mode              : replace
+    spark_write_additional_parameters : {}
+    spark_read_additional_parameters : {}
+#  task_2 :
+#    id                     : task_2
+#    task_description       : A mongo db source test task
+#    source_connection_name : mongo_conn
+#    target_connection_name : mysql_conn
+#    raw_query              : { }
+#    raw_alias              : mongo_data
+#    stage_query            : select *, 'Mongo DB Data' as Mongo_Column from mongo_data
+#    stage_alias            : different_alias
+#    target_container_name  : sajal_col
+#    save_mode              : replace
+#    # optional parameters
+#    optional_param         :
+#      # source collection name in case of mongo db
+#      source_collection_name : sajal_col
+#  task_3 :
+#    id                     : task_3
+#    task_description       : A mongo db target test task
+#    # if you only want to query the stage environment
+#    source_connection_name : stagedb
+#    target_connection_name : mongo_conn
+#    stage_query            : select item_name, max_discount, 'tata nexon' as car_name from mongo_data
+#    stage_alias            : stage_mongo_alias
+#    target_container_name  : sajal_col
+#    save_mode              : append
+#  task_4 :
+#    id                     : task_4
+#    task_description       : DynamoDB to SQL connection test task
+#    source_connection_name : dynamo_conn
+#    target_connection_name : mssql_conn
+#    # Query in json format, that will be directly passed to resource('dynamodb').Table.scan()
+#    raw_query              : { }
+#    raw_alias              : dynamo_alias
+#    target_container_name  : dynamo_table
+#    save_mode              : replace
+#  task_5 :
+#    id                     : task_5
+#    task_description       : duckdb to dynamo db task
+#    source_connection_name : stagedb
+#    target_connection_name : [ mongo_conn, postgres_conn, local_conn ]
+#    stage_query            : select * , 'sql value is here' as sql_value from dynamo_alias limit 300
+#    target_container_name  : sql_table
+#    save_mode              : replace
+#    optional_param         :
+#      # automatically create a new id for every other entry, if there is no unique id present.
+#      # this is required as when sending data to dynamodb using batch.writer process, each batch
+#      # should have unique partition_key. So either have a predefined partition_key with high cardinality,
+#      # else set this option to true to dynamically create the same, and this will add '_id' to each entry
+#      automatic_id : true
+#  task_6 :
+#    id                     : task_6
+#    task_description       : CSV File to multiple connections
+#    # if it is a file task, mention this as true, so in this case, query will not be used, only direct data will be
+#    # read from connection mentioned
+#    file_task              : True
+#    # this will take preference over the dir path mentioned in 'local_conn'
+#    file_dir_path          : /Users/ssirohi3/personal/data
+#    raw_alias              : s3_csv
+#    source_connection_name : local_conn
+#    target_connection_name : [ mssql_conn, postgres_conn, mongo_conn ]
+#    target_container_name  : CSV_Table
+#    save_mode              : replace
+#  task_7 :
+#    id                     : task_7
+#    task_description       : CSV File to S3 location
+#    source_connection_name : stagedb
+#    target_connection_name : s3_data_conn
+#    stage_query            : select *, 'S3 CSV Data' as csv_column from s3_csv
+#    stage_alias            : s3_alias
+#    # name of the s3 bucket where we going to either store and get the data from
+#    s3_bucket              : testbucksajal
+#    # prefix where the file is
+#    prefix                 : data/
+#    # if storing the file, what is the name of the file
+#    file_name              : data.csv
+#  task_8 :
+#    id                     : task_8
+#    file_task              : True
+#    task_description       : S3 file to multiple data location
+#    source_connection_name : s3_data_conn
+#    s3_bucket              : testbucksajal
+#    prefix                 : data/
+#    raw_alias              : s3_data
+#    stage_query            : select *, 'S3 CSV' as new_s3_column from s3_data
+#    stage_alias            : good_alias
+#    target_connection_name : [ mongo_conn, mssql_conn, mysql_conn ]
+#    target_container_name  : s3_table
+#    save_mode              : replace

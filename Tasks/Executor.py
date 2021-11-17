@@ -1,11 +1,12 @@
 import logging
 
 import duckdb
-import pandas as pd
+from pyspark.sql.dataframe import DataFrame
 from beartype import beartype
 
 from ConnectionPool import connection_pool as cp
 from package_utils.design_patterns import Singleton
+from package_utils import spark
 from .TaskBase import Task
 
 cp = cp.conns
@@ -20,10 +21,10 @@ class TaskExecutor(metaclass=Singleton):
     def __init__(self, task: (Task, None) = None, **options):
         self.options    = options
         self.task       = task
-        self.final_df   = pd.DataFrame()
+        self.final_df: DataFrame
 
     @beartype
-    def _register_data(self, data: pd.DataFrame, data_type='raw_query'):
+    def _register_data(self, data: DataFrame, data_type='raw_query'):
         """
         Register the data into the duckdb database to execute 'stage queries' on them.
         :param data: Data that you want to be registered in duck db
@@ -32,8 +33,8 @@ class TaskExecutor(metaclass=Singleton):
         table_name = self.task.raw_alias if data_type == 'raw_query' else self.task.stage_alias
         # register the table in the globals variable so that when we run duck db query,
         # we are able to find that reference.
-        logging.info(f"Registering table name : {table_name} for top 1 row of data :\n{data.head(1)}")
-        globals()[table_name] = data
+        logging.info(f"Registering table name : {table_name}")
+        data.createOrReplaceTempView(table_name)
 
     def execute_query(self, query_type='source'):
         """
@@ -45,20 +46,20 @@ class TaskExecutor(metaclass=Singleton):
                     or self.task.raw_query == {} \
                     or self.task.optional_param.get('file_task', False) is True:
                 logging.info(f"Executing the source raw query")
-                data_df = cp[self.task.source_connection_name].get_data(
+                data_df: DataFrame = cp[self.task.source_connection_name].get_data(
                     self.task.raw_query or {},
                     **{**self.task.options, **self.task.optional_param}
                 )
                 # set the final_df which will be stored in the target connection
-                logging.info(f"Data count : {len(data_df)} and columns : {list(data_df.columns)}")
+                logging.info(f"Data count : {data_df.count()} and columns : {data_df.schema}")
                 self.final_df = data_df
                 # now register the data in the duck db
                 self._register_data(data_df)
         elif query_type == 'stage':
             if self.task.stage_query:
                 logging.info(f"Executing the stage query on the duck db : {self.task.stage_query}")
-                self.final_df = duckdb.query(self.task.stage_query).to_df()
-                logging.info(f"Data count : {len(self.final_df)} and columns : {list(self.final_df.columns)}")
+                self.final_df: DataFrame = spark.sql(self.task.stage_query)
+                logging.info(f"Data count : {self.final_df.count()} and columns : {list(self.final_df.columns)}")
                 self._register_data(self.final_df, 'stage_query')
         else:
             raise ValueError(f"Wrong query_type parameter : {query_type}")

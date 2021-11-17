@@ -5,7 +5,6 @@ from .SQL.PostgreSQL.postgresql_config_builder import PostgreSQLConfig
 
 # Import NoSQL config builders
 from .NoSQL.MongoDB.mongo_config_builder import MongoConfig
-from .NoSQL.DynamoDB.dynamo_config_builder import DynamoConfig
 
 # Import FileStorage config builders
 from .FileStorage.Local.local_config_builder import LocalFileConfig
@@ -18,7 +17,6 @@ from .SQL.PostgreSQL.postgresql_connection_builder import PostgreSQLConnection
 
 # Import NoSQL related connection builders
 from .NoSQL.MongoDB.mongo_connection_builder import MongoConnection
-from .NoSQL.DynamoDB.dynamo_connection_builder import DynamoConnection
 
 # Import FileStorage related connection builders
 from .FileStorage.Local.local_connection_builder import LocalConnection

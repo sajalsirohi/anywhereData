@@ -6,6 +6,7 @@ from .argument_parser import additional_options
 from .design_patterns import Singleton
 from .logger import prepare_logging
 from .package_utils import read_file, prepare_connection_config, read_config_files
+from .sparkSession import spark
 
 ROOT_DIR = pathlib.Path(__file__).parent.parent.resolve()
 CONFIG_DIR = additional_options.get('config_dir', os.path.join(ROOT_DIR, 'config'))

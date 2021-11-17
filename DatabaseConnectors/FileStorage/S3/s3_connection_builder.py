@@ -17,7 +17,11 @@ class S3Connection(Connection):
     """
     Microsoft SQL connection class for establishing connection
     """
-    connection_type = "local"
+
+    def create_jdbc_url(self) -> str:
+        ...
+
+    connection_type = "s3"
 
     @beartype
     def __init__(self, config: S3Config, connection_name, **options):
@@ -26,6 +30,7 @@ class S3Connection(Connection):
         logging.info(f"Acknowledging of the S3 File connection name : {connection_name}")
         self.client   = boto3.client('s3')
         self.resource = boto3.resource('s3')
+        self.jdbc_url = 'Not as of now'
 
     def set_connection(self):
         """

@@ -15,6 +15,4 @@ class MSSQLConfig(Config):
         super().__init__(config, **options)
         self.port            = self.port or 1433
         # jdbc driver name or odbc driver name
-        self.driver_location = self.config.get('driver_location', '')
-        self.connect_through = self.config.get('connect_through', 'odbc')
-        self.driver          = self.config.get('driver', 'ODBC Driver 17 for SQL Server')
+        self.driver          = self.config.get('driver', 'com.microsoft.sqlserver.jdbc.SQLServerDriver')

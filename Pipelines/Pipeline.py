@@ -50,15 +50,15 @@ class Pipeline(metaclass=Singleton):
             # splitting it. it is a task list basically and now let's create a cyclic graph of it
             tasks = [val.strip() for val in pipeline_str.split("->")]
             # tasks should have length of greater than 2 my brother
-            assert len(tasks) >= 2
 
             for task in tasks:
                 # adding the nodes
                 logging.info(f"Fetching the task : {task} from task pool")
                 task_graph.add_node(tp.pool[task])
-            for itr in range(len(tasks) - 1):
-                logging.info(f"Creating an edge between : {tasks[itr]} -> {tasks[itr+1]}")
-                task_graph.add_edge(tp.pool[tasks[itr]], tp.pool[tasks[itr+1]])
+            if len(tasks) >= 2:
+                for itr in range(len(tasks) - 1):
+                    logging.info(f"Creating an edge between : {tasks[itr]} -> {tasks[itr+1]}")
+                    task_graph.add_edge(tp.pool[tasks[itr]], tp.pool[tasks[itr+1]])
 
             # add the pipelines into the pipeline_name
             self.pipelines[pipeline_name] = task_graph
