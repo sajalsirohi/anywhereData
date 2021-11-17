@@ -24,4 +24,4 @@ class MySQLConnection(SQLConnection):
         Create the jdbc URL
         """
         return f"jdbc:mysql://{self.config.host}:{self.config.port}/{self.config.db_name}" \
-               f"?user={self.config.username}&password={self.config.password}{self.config.properties}"
+               f"{self.config.properties}"

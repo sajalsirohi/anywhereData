@@ -15,3 +15,4 @@ class PostgreSQLConfig(Config):
         super().__init__(config, **options)
         self.port = self.port or 5432
         self.connect_through = 'easter_egg_random_time'
+        self.driver = self.config.get('driver', 'org.postgresql.Driver')

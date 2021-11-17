@@ -25,6 +25,7 @@ connections:
     host            : 127.0.0.1
     port            : 3306
     db_name         : test
+    driver          : com.mysql.cj.jdbc.Driver
   postgres_conn:
     connection_name : postgres_conn
     connection_type : postgresql

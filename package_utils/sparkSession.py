@@ -7,3 +7,5 @@ spark = SparkSession.builder \
     .config("hive.exec.dynamic.partition", "true") \
     .config("hive.exec.dynamic.partition.mode", "nonstrict") \
     .getOrCreate()
+
+spark.sparkContext.setLogLevel('WARN')

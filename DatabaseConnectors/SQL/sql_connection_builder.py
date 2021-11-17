@@ -27,12 +27,12 @@ class SQLConnection(Connection, ABC):
         self.jdbc_url: str = ""
         self.config = sql_config
         self.table_name: str = ""
-        self.current_df: DataFrame = None
+        self.current_df: DataFrame
         self.connection_name: str = connection_name
         self.options: dict = options
 
     @beartype
-    def get_data(self, query: str, **options):
+    def get_data(self, query: str, **options) -> DataFrame:
         """
         Execute the query
         :param query:
@@ -58,7 +58,9 @@ class SQLConnection(Connection, ABC):
                     **{
                         **options.get('spark_read_additional_parameters', {})
                     }
-                })
+                })\
+                .load()
+            return self.current_df
         except Exception as err:
             logging.error(f"Error occurred while executing query : {query}, Error stack - {err}")
             if options.get('ignore_errors'):
@@ -86,6 +88,7 @@ class SQLConnection(Connection, ABC):
         """
         logging.info(f"Sending the data to the connection name: {self.connection_name},"
                      f" with schema : {data.schema}, \nto table : {to_container}, jdbc_url : {self.jdbc_url}")
+        data.show(10, truncate=False)
         data.write \
             .format("jdbc") \
             .options(**{
@@ -100,7 +103,10 @@ class SQLConnection(Connection, ABC):
              **{
                 **options.get('spark_write_additional_parameters', {})
              }
-         })
+         }) \
+            .mode("overwrite") \
+            .save()
+        logging.info("Sent the data successfully to the connection")
 
     def __str__(self):
         return self.config

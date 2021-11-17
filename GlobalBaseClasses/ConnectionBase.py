@@ -22,7 +22,7 @@ class Config:
         self.host             = self.config.get('host')
         self.password         = self.config.get('password')
         self.username         = self.config.get('username')
-        self.db_name          = self.config.get('db_name')
+        self.db_name          = self.config.get('db_name', '')
         self.port             = self.config.get('port')
         self.connection_str   = self.config.get('connection_str')
         self.driver           = self.config.get('driver')
@@ -87,7 +87,8 @@ class Connection(ABC):
     def create_jdbc_url(self) -> str: ...
 
     def __repr__(self):
-        return f"{self.__class__.__name__} (Host = {self.config.host}, " \
+        return f"{self.__class__.__name__}(" \
+               f"Host = {self.config.host}, " \
                f"User = {self.config.username}, " \
                f"Password = {self.config.password}, " \
                f"Port = {self.config.port}, " \
